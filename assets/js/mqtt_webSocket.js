@@ -6,10 +6,10 @@ var StatusPompa = true;
 var mqtt;
 function startConnect() {
     clientID = "clientID-" + "Control Panel";
-    host = "test.mosquitto.org";
-    port = "8081";
-    user = "";
-    pass = "";
+    host = "broker.emqx.io";
+    port = "8083";
+    user = "1710510160@stmikbumigora.ac.id";
+    pass = "acongmursan";
     client = new Paho.MQTT.Client(host, Number(port), clientID);
     client.onConnectionLost = onConnectionLost;
     client.onMessageArrived = onMessageArrived;
@@ -17,17 +17,20 @@ function startConnect() {
         onSuccess: onConnect,
         userName: user,
         password: pass
+        
     });
 }
 function onConnect() {
-    phSensor = "1710510160UlulAzmi/esp32/ph";
-    temperatureSensor = "1710510160UlulAzmi/esp32/temperature";
-    watherLevel = "1710510160UlulAzmi/esp32/whaterlevel";
-    suhu = "1710510160UlulAzmi/esp32/suhu";
+    phSensor = "1710510160@stmikbumigora.ac.id/sensor/ph";
+    sensorKelembaban = "1710510160@stmikbumigora.ac.id/kelembaban";
+    watherLevel = "1710510160@stmikbumigora.ac.id/sensor/levelair";
+    suhuArea = "1710510160@stmikbumigora.ac.id/sensor/suhu";
+    suhuAir = "1710510160@stmikbumigora.ac.id/sensor/suhuair";
     client.subscribe(phSensor);
-    client.subscribe(temperatureSensor);
+    client.subscribe(sensorKelembaban);
     client.subscribe(watherLevel);
-    client.subscribe(suhu);
+    client.subscribe(suhuArea);
+    client.subscribe(suhuAir);
 }
 function onConnectionLost(responseObject) {
     console.log("onConnectionLost: Connection Lost");
@@ -37,16 +40,16 @@ function onConnectionLost(responseObject) {
 }
 function onMessageArrived(message) {
     switch (message.destinationName) {
-        case "1710510160UlulAzmi/esp32/temperature":
+        case "1710510160@stmikbumigora.ac.id/sensor/suhuair":
             document.getElementById("temp").innerHTML = '<h6 class="font-extrabold mb-0"> ' + message.payloadString + '</h6>';
             break;
-        case "1710510160UlulAzmi/esp32/whaterlevel":
+        case "1710510160@stmikbumigora.ac.id/sensor/levelair":
             document.getElementById("Watherlevel").innerHTML = '<h6 class="font-extrabold mb-0"> ' + message.payloadString + ' Cm</h6>';
             break;
-        case "1710510160UlulAzmi/esp32/ph":
+        case "1710510160@stmikbumigora.ac.id/sensor/ph":
             document.getElementById("pHmessages").innerHTML = '<h6 class="font-extrabold mb-0"> ' + message.payloadString + '</h6>';
             break;
-        case "1710510160UlulAzmi/esp32/suhu":
+        case "1710510160@stmikbumigora.ac.id/sensor/suhu":
             document.getElementById("SuhuSekitar").innerHTML = '<h6 class="font-extrabold mb-0"> ' + message.payloadString + ' C</h6>';
             break;
     }
@@ -58,7 +61,7 @@ function startDisconnect() {
 
 function tblPompa() {
     var btn = document.getElementById("tblPompa").value;
-    var topic = "1710510160UlulAzmi/esp32/controll/pompa";
+    var topic = "1710510160@stmikbumigora.ac.id/controll/pompa";
     tblmessage = new Paho.MQTT.Message(btn);
     if (btn == "pompa_off") {
         tblmessage.destinationName = topic;
@@ -75,7 +78,7 @@ function tblPompa() {
 
 function tblNutrisi() {
     var btn = document.getElementById("tblNutrisi").value;
-    var topic = "1710510160UlulAzmi/esp32/controll/nutrisi";
+    var topic = "1710510160@stmikbumigora.ac.id/controll/nutrisi";
     tblmessage = new Paho.MQTT.Message(btn);
     if (btn == "nutrisi_off") {
         tblmessage.destinationName = topic;
